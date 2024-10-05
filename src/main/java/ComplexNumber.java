@@ -44,6 +44,18 @@ public class ComplexNumber {
         return new ComplexNumber(resultingReal, resultingImaginary);
     }
 
+    public ComplexNumber subtract(ComplexNumber other) {
+        int resultingReal, resultingImaginary;
+        if (other == null) {
+            resultingReal = 0;
+            resultingImaginary = 0;
+        } else {
+            resultingReal = getReal() + other.getReal();
+            resultingImaginary = getImaginary() - other.getImaginary();
+        }
+        return new ComplexNumber(resultingReal, resultingImaginary);
+    }
+
     public ComplexNumber multiply(ComplexNumber other) {
         int resultingReal, resultingImaginary;
         if (other == null) {
@@ -54,9 +66,5 @@ public class ComplexNumber {
             resultingImaginary = getReal() * other.getImaginary() + getImaginary() * other.getReal();
         }
         return new ComplexNumber(resultingReal, resultingImaginary);
-    }
-
-    public ComplexNumber subtract(ComplexNumber other) {
-        return add(other.multiply(new ComplexNumber(-1)));
     }
 }
