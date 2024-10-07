@@ -21,7 +21,15 @@ public class Matrix {
         return matrix;
     }
 
-    public void changeMatrix(int raw, int column, ComplexNumber value) {
+    public ComplexNumber getElement(int raw, int column) {
+        if (raw < rawsAmount && column < columnsAmount) {
+            return matrix[raw][column];
+        } else {
+            return null;
+        }
+    }
+
+    public void setElement(int raw, int column, ComplexNumber value) {
         if (raw < rawsAmount && column < columnsAmount && value != null) {
             matrix[raw][column] = value;
         }
@@ -31,15 +39,35 @@ public class Matrix {
         return rawsAmount;
     }
 
-    public void setRawsAmount(int rawsAmount) {
-        this.rawsAmount = rawsAmount;
-    }
-
     public int getColumnsAmount() {
         return columnsAmount;
     }
 
-    public void setColumnsAmount(int columnsAmount) {
-        this.columnsAmount = columnsAmount;
+    public Matrix add(Matrix other) {
+        if (rawsAmount != other.rawsAmount || columnsAmount != other.columnsAmount) {
+            throw new IllegalArgumentException("Matrices must have the same size for the add operation.");
+        } else {
+            Matrix result = new Matrix(this.columnsAmount, this.rawsAmount);
+            for (int raw = 0; raw < rawsAmount; raw++) {
+                for (int column = 0; column < columnsAmount; column++) {
+                    result.setElement(raw, column, this.getElement(raw, column).add(other.getElement(raw, column)));
+                }
+            }
+            return result;
+        }
+    }
+
+    public Matrix subtract(Matrix other) {
+        if (rawsAmount != other.rawsAmount || columnsAmount != other.columnsAmount) {
+            throw new IllegalArgumentException("Matrices must have the same size for the subtract operation.");
+        } else {
+            Matrix result = new Matrix(this.columnsAmount, this.rawsAmount);
+            for (int raw = 0; raw < rawsAmount; raw++) {
+                for (int column = 0; column < columnsAmount; column++) {
+                    result.setElement(raw, column, this.getElement(raw, column).subtract(other.getElement(raw, column)));
+                }
+            }
+            return result;
+        }
     }
 }
