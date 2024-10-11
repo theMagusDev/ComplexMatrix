@@ -75,7 +75,7 @@ public class Matrix {
         }
     }
 
-    public Matrix multiplicate(Matrix other) {
+    public Matrix multiply(Matrix other) {
         if (this.getColumnsNumber() != other.getRawsNumber()) {
             throw new IllegalArgumentException("Matrices' dimensions must fulfil the multiplication condition.");
         }
@@ -218,21 +218,21 @@ public class Matrix {
 
         Matrix transposed = this.getTransposed();
         Matrix minor;
-        Matrix reversed = new Matrix(getRawsNumber(), getColumnsNumber());
+        Matrix inversed = new Matrix(getRawsNumber(), getColumnsNumber());
         for (int i = 0; i < getRawsNumber(); i++) {
             for (int j = 0; j < getColumnsNumber(); j++) {
                 minor = new Matrix(transposed.matrix);
                 minor.removeRaw(i);
                 minor.removeColumn(j);
                 if ((i + j) % 2 == 0) {
-                    reversed.matrix[i][j] = minor.calculateDeterminant();
+                    inversed.matrix[i][j] = minor.calculateDeterminant();
                 } else {
-                    reversed.matrix[i][j] = minor.calculateDeterminant().multiply(-1);
+                    inversed.matrix[i][j] = minor.calculateDeterminant().multiply(-1);
                 }
             }
         }
 
-        return reversed;
+        return inversed;
     }
 
     public Matrix divide(Matrix other) {
