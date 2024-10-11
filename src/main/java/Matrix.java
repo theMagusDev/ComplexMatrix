@@ -236,7 +236,12 @@ public class Matrix {
     }
 
     public Matrix divide(Matrix other) {
-
+        if (this.getColumnsNumber() != other.getColumnsNumber()) {
+            throw new IllegalArgumentException(
+                    "Matrices can not be divided: first matrix's column number ("
+                            + this.getColumnsNumber() + ") is not equal to second matrix's ("
+                            + other.getColumnsNumber() + ").");
+        }
+        return this.multiply(other.getInverse());
     }
-    // #todo multiplicate and division methods. Do not forget to make dimension check
 }
