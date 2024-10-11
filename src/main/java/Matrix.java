@@ -207,8 +207,32 @@ public class Matrix {
         return transposedMatrix;
     }
 
-    public Matrix inverse() {
+    public Matrix getInverse() {
+        if (getRawsNumber() != getColumnsNumber()) {
+            throw new IllegalCallerException("Not square matrix can not have its reverse.");
+        }
+        ComplexNumber determinant = this.calculateDeterminant();
+        if (determinant.getReal() == 0 && determinant.getImaginary() == 0) {
+            throw new IllegalCallerException("Determinant is equal to zero, matrix does not have its inverse.");
+        }
 
+        Matrix transposed = this.getTransposed();
+        Matrix minor;
+        Matrix reversed = new Matrix(getRawsNumber(), getColumnsNumber());
+        for (int i = 0; i < getRawsNumber(); i++) {
+            for (int j = 0; j < getColumnsNumber(); j++) {
+                minor = new Matrix(transposed.matrix);
+                minor.removeRaw(i);
+                minor.removeColumn(j);
+                if ((i + j) % 2 == 0) {
+                    reversed.matrix[i][j] = minor.calculateDeterminant();
+                } else {
+                    reversed.matrix[i][j] = minor.calculateDeterminant().multiply(-1);
+                }
+            }
+        }
+
+        return reversed;
     }
 
     public Matrix divide(Matrix other) {
