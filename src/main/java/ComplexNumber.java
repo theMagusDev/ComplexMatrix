@@ -67,4 +67,10 @@ public class ComplexNumber {
         }
         return new ComplexNumber(resultingReal, resultingImaginary);
     }
+
+    public ComplexNumber multiply(int other) {
+        int resultingReal = getReal() * other;
+        int resultingImaginary = getImaginary() * other;
+        return new ComplexNumber(resultingReal, resultingImaginary);
+    }
 }
