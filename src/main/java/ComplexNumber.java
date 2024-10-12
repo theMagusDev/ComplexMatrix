@@ -1,22 +1,22 @@
 public class ComplexNumber {
 
-    private int real;
-    private int imaginary;
+    private double real;
+    private double imaginary;
 
     public ComplexNumber() {
         this(0, 0);
     }
 
-    public ComplexNumber(int real) {
+    public ComplexNumber(double real) {
         this(real, 0);
     }
 
-    public ComplexNumber(int real, int imaginary) {
+    public ComplexNumber(double real, double imaginary) {
         this.real = real;
         this.imaginary = imaginary;
     }
 
-    public int getReal() {
+    public double getReal() {
         return real;
     }
 
@@ -24,7 +24,7 @@ public class ComplexNumber {
         this.real = real;
     }
 
-    public int getImaginary() {
+    public double getImaginary() {
         return imaginary;
     }
 
@@ -33,7 +33,7 @@ public class ComplexNumber {
     }
 
     public ComplexNumber add(ComplexNumber other) {
-        int resultingReal, resultingImaginary;
+        double resultingReal, resultingImaginary;
         if (other == null) {
             resultingReal = 0;
             resultingImaginary = 0;
@@ -45,7 +45,7 @@ public class ComplexNumber {
     }
 
     public ComplexNumber subtract(ComplexNumber other) {
-        int resultingReal, resultingImaginary;
+        double resultingReal, resultingImaginary;
         if (other == null) {
             resultingReal = 0;
             resultingImaginary = 0;
@@ -57,7 +57,7 @@ public class ComplexNumber {
     }
 
     public ComplexNumber multiply(ComplexNumber other) {
-        int resultingReal, resultingImaginary;
+        double resultingReal, resultingImaginary;
         if (other == null) {
             resultingReal = 0;
             resultingImaginary = 0;
@@ -69,8 +69,8 @@ public class ComplexNumber {
     }
 
     public ComplexNumber multiply(int other) {
-        int resultingReal = getReal() * other;
-        int resultingImaginary = getImaginary() * other;
+        double resultingReal = getReal() * other;
+        double resultingImaginary = getImaginary() * other;
         return new ComplexNumber(resultingReal, resultingImaginary);
     }
 }
