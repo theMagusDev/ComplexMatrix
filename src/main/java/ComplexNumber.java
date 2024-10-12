@@ -40,8 +40,8 @@ public class ComplexNumber {
             resultingReal = 0;
             resultingImaginary = 0;
         } else {
-            resultingReal = getReal() + other.getReal();
-            resultingImaginary = getImaginary() + other.getImaginary();
+            resultingReal = this.real + other.real;
+            resultingImaginary = this.imaginary + other.imaginary;
         }
         return new ComplexNumber(resultingReal, resultingImaginary);
     }
@@ -52,8 +52,8 @@ public class ComplexNumber {
             resultingReal = 0;
             resultingImaginary = 0;
         } else {
-            resultingReal = getReal() + other.getReal();
-            resultingImaginary = getImaginary() - other.getImaginary();
+            resultingReal = this.real - other.real;
+            resultingImaginary = this.imaginary - other.imaginary;
         }
         return new ComplexNumber(resultingReal, resultingImaginary);
     }
@@ -64,15 +64,32 @@ public class ComplexNumber {
             resultingReal = 0;
             resultingImaginary = 0;
         } else {
-            resultingReal = getReal() * other.getReal() - getImaginary() * other.getImaginary();
-            resultingImaginary = getReal() * other.getImaginary() + getImaginary() * other.getReal();
+            resultingReal = this.real * other.real - this.imaginary * other.imaginary;
+            resultingImaginary = this.real * other.imaginary + this.imaginary * other.real;
         }
         return new ComplexNumber(resultingReal, resultingImaginary);
     }
 
     public ComplexNumber multiply(int other) {
-        double resultingReal = getReal() * other;
-        double resultingImaginary = getImaginary() * other;
+        double resultingReal = this.real * other;
+        double resultingImaginary = this.imaginary * other;
+        return new ComplexNumber(resultingReal, resultingImaginary);
+    }
+
+    public ComplexNumber divide(ComplexNumber other) {
+        if (other == null || (other.real == 0 && other.imaginary == 0)) {
+            throw new ArithmeticException("Division by zero is not allowed.");
+        }
+
+        // z1 = a+bi, z2 = c+di
+        double a = this.real;
+        double b = this.imaginary;
+        double c = other.real;
+        double d = other.imaginary;
+
+        double denominator = c*c + d*d;
+        double resultingReal = (a*c + b*d) / denominator;
+        double resultingImaginary = (b*c - a*d) / denominator;
         return new ComplexNumber(resultingReal, resultingImaginary);
     }
 

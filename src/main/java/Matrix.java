@@ -49,9 +49,9 @@ public class Matrix {
         return matrix[0].length;
     }
 
-    public Matrix add(Matrix other) {
+    public Matrix add(Matrix other) throws InvalidMatrixDimensionException {
         if (this.getRowsNumber() != other.getRowsNumber() || this.getColumnsNumber() != other.getColumnsNumber()) {
-            throw new IllegalArgumentException("Matrices must have the same size for the add operation.");
+            throw new InvalidMatrixDimensionException("Matrices must have the same size for the add operation.");
         } else {
             Matrix result = new Matrix(this.getColumnsNumber(), this.getRowsNumber());
             for (int row = 0; row < getRowsNumber(); row++) {
@@ -63,9 +63,9 @@ public class Matrix {
         }
     }
 
-    public Matrix subtract(Matrix other) {
+    public Matrix subtract(Matrix other) throws InvalidMatrixDimensionException {
         if (this.getRowsNumber() != other.getRowsNumber() || this.getColumnsNumber() != other.getColumnsNumber()) {
-            throw new IllegalArgumentException("Matrices must have the same size for the subtract operation.");
+            throw new InvalidMatrixDimensionException("Matrices must have the same size for the subtract operation.");
         } else {
             Matrix result = new Matrix(this.getColumnsNumber(), this.getRowsNumber());
             for (int row = 0; row < getRowsNumber(); row++) {
@@ -77,9 +77,9 @@ public class Matrix {
         }
     }
 
-    public Matrix multiply(Matrix other) {
+    public Matrix multiply(Matrix other) throws InvalidMatrixDimensionException {
         if (this.getColumnsNumber() != other.getRowsNumber()) {
-            throw new IllegalArgumentException("Matrices' dimensions must fulfil the multiplication condition.");
+            throw new InvalidMatrixDimensionException("Matrices' dimensions must fulfil the multiplication condition: first.columnsNumber = second.rowsNumber.");
         }
 
         Matrix result = new Matrix(this.getRowsNumber(), other.getColumnsNumber());
@@ -99,41 +99,35 @@ public class Matrix {
         return result;
     }
 
-    public ComplexNumber calculateDeterminant() {
+    public ComplexNumber calculateDeterminant() throws InvalidMatrixDimensionException {
         if (getRowsNumber() != getColumnsNumber()) {
-            throw new IllegalCallerException("Not square matrix can not have a determinant.");
+            throw new InvalidMatrixDimensionException("Not square matrix can not have a determinant.");
         }
 
+        return calculateNxNDeterminant();
+    }
+
+//    private ComplexNumber calculate2x2Determinant() {
+//        return matrix[0][0].multiply(matrix[1][1]).subtract(matrix[0][1].multiply(matrix[1][0]));
+//    }
+//
+//    private ComplexNumber calculate3x3Determinant() {
+//        ComplexNumber first = matrix[0][0].multiply(matrix[1][1]).multiply(matrix[2][2])
+//                .add(matrix[0][1].multiply(matrix[1][2]).multiply(matrix[2][0]))
+//                .add(matrix[0][2].multiply(matrix[1][0]).multiply(matrix[2][1]));
+//        ComplexNumber second = matrix[0][2].multiply(matrix[1][1]).multiply(matrix[2][0])
+//                .add(matrix[0][1].multiply(matrix[1][0]).multiply(matrix[2][2]))
+//                .add(matrix[0][0].multiply(matrix[1][2]).multiply(matrix[2][1]));
+//        return first.subtract(second);
+//    }
+
+    private ComplexNumber calculateNxNDeterminant() {
         if (getRowsNumber() == 1) {
             return new ComplexNumber(
                     matrix[0][0].getReal(),
                     matrix[0][0].getImaginary()
             );
         }
-        if (getRowsNumber() == 2) {
-            return calculate2x2Determinant();
-        }
-        if (getRowsNumber() == 3) { // when it comes to 3x3 matrix
-            return calculate3x3Determinant();
-        }
-        return calculateNxNDeterminant();
-    }
-
-    private ComplexNumber calculate2x2Determinant() {
-        return matrix[0][0].multiply(matrix[1][1]).subtract(matrix[0][1].multiply(matrix[1][0]));
-    }
-
-    private ComplexNumber calculate3x3Determinant() {
-        ComplexNumber first = matrix[0][0].multiply(matrix[1][1]).multiply(matrix[2][2])
-                .add(matrix[0][1].multiply(matrix[1][2]).multiply(matrix[2][0]))
-                .add(matrix[0][2].multiply(matrix[1][0]).multiply(matrix[2][1]));
-        ComplexNumber second = matrix[0][2].multiply(matrix[1][1]).multiply(matrix[2][0])
-                .add(matrix[0][1].multiply(matrix[1][0]).multiply(matrix[2][2]))
-                .add(matrix[0][0].multiply(matrix[1][2]).multiply(matrix[2][1]));
-        return first.subtract(second);
-    }
-
-    private ComplexNumber calculateNxNDeterminant() {
         ComplexNumber determinant = new ComplexNumber(0);
         // decomposition of the determinant by the first column
         int column = 0;
@@ -143,9 +137,9 @@ public class Matrix {
             minor.removeRow(row);
             minor.removeColumn(column);
             if ((row + column) % 2 == 0) { // sign depends on the row and column index
-                determinant = determinant.add(minor.calculateDeterminant());
+                determinant = determinant.add(minor.calculateNxNDeterminant());
             } else {
-                determinant = determinant.add(minor.calculateDeterminant()).multiply(-1);
+                determinant = determinant.add(minor.calculateNxNDeterminant()).multiply(-1);
             }
         }
 
@@ -209,9 +203,9 @@ public class Matrix {
         return transposedMatrix;
     }
 
-    public Matrix getInverse() {
+    public Matrix getInverse() throws InvalidMatrixDimensionException {
         if (getRowsNumber() != getColumnsNumber()) {
-            throw new IllegalCallerException("Not square matrix can not have its reverse.");
+            throw new InvalidMatrixDimensionException("Not square matrix can not have its reverse.");
         }
         ComplexNumber determinant = this.calculateDeterminant();
         if (determinant.getReal() == 0 && determinant.getImaginary() == 0) {
@@ -237,9 +231,9 @@ public class Matrix {
         return inversed;
     }
 
-    public Matrix divide(Matrix other) {
+    public Matrix divide(Matrix other) throws InvalidMatrixDimensionException {
         if (this.getColumnsNumber() != other.getColumnsNumber()) {
-            throw new IllegalArgumentException(
+            throw new InvalidMatrixDimensionException(
                     "Matrices can not be divided: first matrix's column number ("
                             + this.getColumnsNumber() + ") is not equal to second matrix's ("
                             + other.getColumnsNumber() + ").");
@@ -251,8 +245,8 @@ public class Matrix {
     public String toString() {
        StringBuilder stringBuilder = new StringBuilder();
        for (int row = 0; row < getRowsNumber(); row++) {
-           for (int column = 0; row < getColumnsNumber(); column++) {
-                stringBuilder.append(matrix[row][column]).append(' ');
+           for (int column = 0; column < getColumnsNumber(); column++) {
+               stringBuilder.append(matrix[row][column]).append(' ');
            }
            stringBuilder.append('\n');
        }
