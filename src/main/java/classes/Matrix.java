@@ -1,4 +1,6 @@
-import java.util.Arrays;
+package classes;
+
+import exceptions.InvalidMatrixDimensionException;
 
 public class Matrix {
     private ComplexNumber[][] matrix;
@@ -107,19 +109,20 @@ public class Matrix {
         return calculateNxNDeterminant();
     }
 
-//    private ComplexNumber calculate2x2Determinant() {
+//    private classes.ComplexNumber calculate2x2Determinant() {
 //        return matrix[0][0].multiply(matrix[1][1]).subtract(matrix[0][1].multiply(matrix[1][0]));
 //    }
 //
-//    private ComplexNumber calculate3x3Determinant() {
-//        ComplexNumber first = matrix[0][0].multiply(matrix[1][1]).multiply(matrix[2][2])
+//    private classes.ComplexNumber calculate3x3Determinant() {
+//        classes.ComplexNumber first = matrix[0][0].multiply(matrix[1][1]).multiply(matrix[2][2])
 //                .add(matrix[0][1].multiply(matrix[1][2]).multiply(matrix[2][0]))
 //                .add(matrix[0][2].multiply(matrix[1][0]).multiply(matrix[2][1]));
-//        ComplexNumber second = matrix[0][2].multiply(matrix[1][1]).multiply(matrix[2][0])
+//        classes.ComplexNumber second = matrix[0][2].multiply(matrix[1][1]).multiply(matrix[2][0])
 //                .add(matrix[0][1].multiply(matrix[1][0]).multiply(matrix[2][2]))
 //                .add(matrix[0][0].multiply(matrix[1][2]).multiply(matrix[2][1]));
 //        return first.subtract(second);
 //    }
+    // #todo decide if 2x2 and 3x3 are necessary or general case NxN is better
 
     private ComplexNumber calculateNxNDeterminant() {
         if (getRowsNumber() == 1) {

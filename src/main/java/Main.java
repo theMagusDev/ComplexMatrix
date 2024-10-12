@@ -1,3 +1,7 @@
+import classes.ComplexNumber;
+import classes.Matrix;
+import exceptions.InvalidMatrixDimensionException;
+
 public class Main {
 
     static void testComplexNumber() {
