@@ -5,18 +5,18 @@ public class Matrix {
         this(0, 0);
     }
 
-    public Matrix(int rawsNumber, int columnsNumber) {
-        this(new ComplexNumber[rawsNumber][columnsNumber]);
+    public Matrix(int rowsNumber, int columnsNumber) {
+        this(new ComplexNumber[rowsNumber][columnsNumber]);
     }
 
     public Matrix(ComplexNumber[][] matrix) {
         if (matrix.length == 0) {
             this.matrix = null;
         } else {
-            int rawsNumber = matrix.length;
+            int rowsNumber = matrix.length;
             int columnsNumber = matrix[0].length;
-            this.matrix = new ComplexNumber[rawsNumber][columnsNumber];
-            for (int i = 0; i < rawsNumber; i++) {
+            this.matrix = new ComplexNumber[rowsNumber][columnsNumber];
+            for (int i = 0; i < rowsNumber; i++) {
                 for (int j = 0; j < columnsNumber; j++) {
                     if (matrix[i][j] == null) {
                         this.matrix[i][j] = new ComplexNumber(0);
@@ -32,7 +32,7 @@ public class Matrix {
         return matrix;
     }
 
-    public int getRawsNumber() {
+    public int getRowsNumber() {
         if (matrix != null) {
             return matrix.length;
         } else {
@@ -48,13 +48,13 @@ public class Matrix {
     }
 
     public Matrix add(Matrix other) {
-        if (this.getRawsNumber() != other.getRawsNumber() || this.getColumnsNumber() != other.getColumnsNumber()) {
+        if (this.getRowsNumber() != other.getRowsNumber() || this.getColumnsNumber() != other.getColumnsNumber()) {
             throw new IllegalArgumentException("Matrices must have the same size for the add operation.");
         } else {
-            Matrix result = new Matrix(this.getColumnsNumber(), this.getRawsNumber());
-            for (int raw = 0; raw < getRawsNumber(); raw++) {
+            Matrix result = new Matrix(this.getColumnsNumber(), this.getRowsNumber());
+            for (int row = 0; row < getRowsNumber(); row++) {
                 for (int column = 0; column < getColumnsNumber(); column++) {
-                    result.matrix[raw][column] = this.matrix[raw][column].add(other.matrix[raw][column]);
+                    result.matrix[row][column] = this.matrix[row][column].add(other.matrix[row][column]);
                 }
             }
             return result;
@@ -62,13 +62,13 @@ public class Matrix {
     }
 
     public Matrix subtract(Matrix other) {
-        if (this.getRawsNumber() != other.getRawsNumber() || this.getColumnsNumber() != other.getColumnsNumber()) {
+        if (this.getRowsNumber() != other.getRowsNumber() || this.getColumnsNumber() != other.getColumnsNumber()) {
             throw new IllegalArgumentException("Matrices must have the same size for the subtract operation.");
         } else {
-            Matrix result = new Matrix(this.getColumnsNumber(), this.getRawsNumber());
-            for (int raw = 0; raw < getRawsNumber(); raw++) {
+            Matrix result = new Matrix(this.getColumnsNumber(), this.getRowsNumber());
+            for (int row = 0; row < getRowsNumber(); row++) {
                 for (int column = 0; column < getColumnsNumber(); column++) {
-                    result.matrix[raw][column] = this.matrix[raw][column].subtract(other.matrix[raw][column]);
+                    result.matrix[row][column] = this.matrix[row][column].subtract(other.matrix[row][column]);
                 }
             }
             return result;
@@ -76,21 +76,21 @@ public class Matrix {
     }
 
     public Matrix multiply(Matrix other) {
-        if (this.getColumnsNumber() != other.getRawsNumber()) {
+        if (this.getColumnsNumber() != other.getRowsNumber()) {
             throw new IllegalArgumentException("Matrices' dimensions must fulfil the multiplication condition.");
         }
 
-        Matrix result = new Matrix(this.getRawsNumber(), other.getColumnsNumber());
+        Matrix result = new Matrix(this.getRowsNumber(), other.getColumnsNumber());
         ComplexNumber tempElement;
-        for (int raw = 0; raw < getRawsNumber(); raw++) {
+        for (int row = 0; row < getRowsNumber(); row++) {
             for (int column = 0; column < getColumnsNumber(); column++) {
                 tempElement = new ComplexNumber(0);
                 tempElement.setReal(0);
                 tempElement.setImaginary(0);
-                for (int i = 0; i < getRawsNumber(); i++) {
-                    tempElement = tempElement.add(matrix[raw][i].add(other.matrix[i][column]));
+                for (int i = 0; i < getRowsNumber(); i++) {
+                    tempElement = tempElement.add(matrix[row][i].add(other.matrix[i][column]));
                 }
-                result.matrix[raw][column] = tempElement;
+                result.matrix[row][column] = tempElement;
             }
         }
 
@@ -98,20 +98,20 @@ public class Matrix {
     }
 
     public ComplexNumber calculateDeterminant() {
-        if (getRawsNumber() != getColumnsNumber()) {
+        if (getRowsNumber() != getColumnsNumber()) {
             throw new IllegalCallerException("Not square matrix can not have a determinant.");
         }
 
-        if (getRawsNumber() == 1) {
+        if (getRowsNumber() == 1) {
             return new ComplexNumber(
                     matrix[0][0].getReal(),
                     matrix[0][0].getImaginary()
             );
         }
-        if (getRawsNumber() == 2) {
+        if (getRowsNumber() == 2) {
             return calculate2x2Determinant();
         }
-        if (getRawsNumber() == 3) {
+        if (getRowsNumber() == 3) { // when it comes to 3x3 matrix
             return calculate3x3Determinant();
         }
         return calculateNxNDeterminant();
@@ -136,11 +136,11 @@ public class Matrix {
         // decomposition of the determinant by the first column
         int column = 0;
         Matrix minor;
-        for (int raw = 0; raw < getRawsNumber(); raw++) {
+        for (int row = 0; row < getRowsNumber(); row++) {
             minor = new Matrix(getMatrix());
-            minor.removeRaw(raw);
+            minor.removeRow(row);
             minor.removeColumn(column);
-            if ((raw + column) % 2 == 0) { // sign depends on the raw and column index
+            if ((row + column) % 2 == 0) { // sign depends on the row and column index
                 determinant = determinant.add(minor.calculateDeterminant());
             } else {
                 determinant = determinant.add(minor.calculateDeterminant()).multiply(-1);
@@ -150,23 +150,23 @@ public class Matrix {
         return determinant;
     }
 
-    private void removeRaw(int rawToDelete) {
-        if (rawToDelete < 0) {
-            throw new IllegalArgumentException("Raw index can not be negative.");
+    private void removeRow(int rowToDelete) {
+        if (rowToDelete < 0) {
+            throw new IllegalArgumentException("Row index can not be negative.");
         }
-        if (rawToDelete >= getRawsNumber()) {
+        if (rowToDelete >= getRowsNumber()) {
             return;
         }
 
-        ComplexNumber[][] newMatrix = new ComplexNumber[getRawsNumber()-1][getColumnsNumber()];
-        byte skippedRaw = 0;
-        for (int raw = 0; raw < getRawsNumber(); raw++) {
-            if (raw == rawToDelete) {
-                skippedRaw = 1;
+        ComplexNumber[][] newMatrix = new ComplexNumber[getRowsNumber()-1][getColumnsNumber()];
+        byte skippedRow = 0;
+        for (int row = 0; row < getRowsNumber(); row++) {
+            if (row == rowToDelete) {
+                skippedRow = 1;
                 continue;
             }
             for (int column = 0; column < getColumnsNumber(); column++) {
-                newMatrix[raw - skippedRaw][column] = matrix[raw][column];
+                newMatrix[row - skippedRow][column] = matrix[row][column];
             }
         }
         matrix = newMatrix;
@@ -176,31 +176,31 @@ public class Matrix {
         if (columnToDelete < 0) {
             throw new IllegalArgumentException("Column index can not be negative.");
         }
-        if (columnToDelete >= getRawsNumber()) {
+        if (columnToDelete >= getRowsNumber()) {
             return;
         }
 
-        ComplexNumber[][] newMatrix = new ComplexNumber[getRawsNumber()][getColumnsNumber()-1];
+        ComplexNumber[][] newMatrix = new ComplexNumber[getRowsNumber()][getColumnsNumber()-1];
         byte skippedColumn = 0;
-        for (int raw = 0; raw < getRawsNumber(); raw++) {
-            if (raw == columnToDelete) {
+        for (int row = 0; row < getRowsNumber(); row++) {
+            if (row == columnToDelete) {
                 skippedColumn = 1;
                 continue;
             }
             for (int column = 0; column < getColumnsNumber(); column++) {
-                newMatrix[raw][column - skippedColumn] = matrix[raw][column];
+                newMatrix[row][column - skippedColumn] = matrix[row][column];
             }
         }
         matrix = newMatrix;
     }
 
     public Matrix getTransposed() {
-        Matrix transposedMatrix = new Matrix(getColumnsNumber(), getRawsNumber());
-        for (int i = 0; i < getRawsNumber(); i++) {
-            for (int j = 0; j < getColumnsNumber(); j++) {
-                transposedMatrix.matrix[j][i] = new ComplexNumber(
-                        this.matrix[i][j].getReal(),
-                        this.matrix[i][j].getImaginary()
+        Matrix transposedMatrix = new Matrix(getColumnsNumber(), getRowsNumber());
+        for (int row = 0; row < getRowsNumber(); row++) {
+            for (int column = 0; column < getColumnsNumber(); column++) {
+                transposedMatrix.matrix[column][row] = new ComplexNumber(
+                        this.matrix[row][column].getReal(),
+                        this.matrix[row][column].getImaginary()
                 );
             }
         }
@@ -208,7 +208,7 @@ public class Matrix {
     }
 
     public Matrix getInverse() {
-        if (getRawsNumber() != getColumnsNumber()) {
+        if (getRowsNumber() != getColumnsNumber()) {
             throw new IllegalCallerException("Not square matrix can not have its reverse.");
         }
         ComplexNumber determinant = this.calculateDeterminant();
@@ -218,16 +218,16 @@ public class Matrix {
 
         Matrix transposed = this.getTransposed();
         Matrix minor;
-        Matrix inversed = new Matrix(getRawsNumber(), getColumnsNumber());
-        for (int i = 0; i < getRawsNumber(); i++) {
-            for (int j = 0; j < getColumnsNumber(); j++) {
+        Matrix inversed = new Matrix(getRowsNumber(), getColumnsNumber());
+        for (int row = 0; row < getRowsNumber(); row++) {
+            for (int column = 0; column < getColumnsNumber(); column++) {
                 minor = new Matrix(transposed.matrix);
-                minor.removeRaw(i);
-                minor.removeColumn(j);
-                if ((i + j) % 2 == 0) {
-                    inversed.matrix[i][j] = minor.calculateDeterminant();
+                minor.removeRow(row);
+                minor.removeColumn(column);
+                if ((row + column) % 2 == 0) {
+                    inversed.matrix[row][column] = minor.calculateDeterminant();
                 } else {
-                    inversed.matrix[i][j] = minor.calculateDeterminant().multiply(-1);
+                    inversed.matrix[row][column] = minor.calculateDeterminant().multiply(-1);
                 }
             }
         }
