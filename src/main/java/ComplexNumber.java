@@ -1,14 +1,16 @@
+import java.text.DecimalFormat;
+
 public class ComplexNumber {
 
     private double real;
     private double imaginary;
 
     public ComplexNumber() {
-        this(0, 0);
+        this(0.0, 0.0);
     }
 
     public ComplexNumber(double real) {
-        this(real, 0);
+        this(real, 0.0);
     }
 
     public ComplexNumber(double real, double imaginary) {
@@ -72,5 +74,13 @@ public class ComplexNumber {
         double resultingReal = getReal() * other;
         double resultingImaginary = getImaginary() * other;
         return new ComplexNumber(resultingReal, resultingImaginary);
+    }
+
+    @Override
+    public String toString() {
+        DecimalFormat decFormat = new DecimalFormat("#.##");
+        return "(" + decFormat.format(getReal())
+                + " + "
+                + decFormat.format(getImaginary()) + "i)";
     }
 }

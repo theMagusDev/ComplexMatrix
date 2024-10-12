@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Matrix {
     private ComplexNumber[][] matrix;
 
@@ -243,5 +245,17 @@ public class Matrix {
                             + other.getColumnsNumber() + ").");
         }
         return this.multiply(other.getInverse());
+    }
+
+    @Override
+    public String toString() {
+       StringBuilder stringBuilder = new StringBuilder();
+       for (int row = 0; row < getRowsNumber(); row++) {
+           for (int column = 0; row < getColumnsNumber(); column++) {
+                stringBuilder.append(matrix[row][column]).append(' ');
+           }
+           stringBuilder.append('\n');
+       }
+       return stringBuilder.toString();
     }
 }
