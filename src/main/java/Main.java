@@ -1,5 +1,6 @@
 import classes.ComplexNumber;
 import classes.Matrix;
+import exceptions.InvalidDeterminantException;
 import exceptions.InvalidMatrixDimensionException;
 
 public class Main {
@@ -74,7 +75,7 @@ public class Main {
 
         try {
             System.out.println(firstMatrix.getInverse());
-        } catch (InvalidMatrixDimensionException | IllegalCallerException e) {
+        } catch (InvalidMatrixDimensionException | InvalidDeterminantException e) {
             System.out.println(e.getMessage()); // Determinant is equal to zero, matrix does not have its inverse.
         }
 
@@ -91,7 +92,7 @@ public class Main {
 
         try {
             System.out.println(thirdMatrix.getInverse());;
-        } catch (InvalidMatrixDimensionException | IllegalCallerException e) {
+        } catch (InvalidMatrixDimensionException | InvalidDeterminantException e) {
             System.out.println(e.getMessage());
         }
     }

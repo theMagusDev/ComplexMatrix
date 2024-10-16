@@ -1,5 +1,6 @@
 package classes;
 
+import exceptions.InvalidDeterminantException;
 import exceptions.InvalidMatrixDimensionException;
 
 public class Matrix {
@@ -15,7 +16,7 @@ public class Matrix {
 
     public Matrix(ComplexNumber[][] matrix) {
         if (matrix.length == 0) {
-            this.matrix = null;
+            this.matrix = new ComplexNumber[0][0];
         } else {
             int rowsNumber = matrix.length;
             int columnsNumber = matrix[0].length;
@@ -55,7 +56,7 @@ public class Matrix {
         if (this.getRowsNumber() != other.getRowsNumber() || this.getColumnsNumber() != other.getColumnsNumber()) {
             throw new InvalidMatrixDimensionException("Matrices must have the same size for the add operation.");
         } else {
-            Matrix result = new Matrix(this.getColumnsNumber(), this.getRowsNumber());
+            Matrix result = new Matrix(this.getRowsNumber(), this.getColumnsNumber());
             for (int row = 0; row < getRowsNumber(); row++) {
                 for (int column = 0; column < getColumnsNumber(); column++) {
                     result.matrix[row][column] = this.matrix[row][column].add(other.matrix[row][column]);
@@ -188,13 +189,13 @@ public class Matrix {
         return transposedMatrix;
     }
 
-    public Matrix getInverse() throws InvalidMatrixDimensionException, IllegalCallerException {
+    public Matrix getInverse() throws InvalidMatrixDimensionException, InvalidDeterminantException {
         if (getRowsNumber() != getColumnsNumber()) {
             throw new InvalidMatrixDimensionException("Not square matrix can not have its reverse.");
         }
         ComplexNumber determinant = this.calculateDeterminant();
         if (determinant.getReal() == 0 && determinant.getImaginary() == 0) {
-            throw new IllegalCallerException("Determinant is equal to zero, matrix does not have its inverse.");
+            throw new InvalidDeterminantException("Matrix with zero determinant is not invertable.");
         }
 
         Matrix transposed = this.getTransposed();
@@ -216,13 +217,14 @@ public class Matrix {
         return inversed;
     }
 
-    public Matrix divide(Matrix other) throws InvalidMatrixDimensionException {
+    public Matrix divide(Matrix other) throws InvalidMatrixDimensionException, InvalidDeterminantException {
         if (this.getColumnsNumber() != other.getColumnsNumber()) {
             throw new InvalidMatrixDimensionException(
                     "Matrices can not be divided: first matrix's column number ("
                             + this.getColumnsNumber() + ") is not equal to second matrix's ("
                             + other.getColumnsNumber() + ").");
         }
+
         return this.multiply(other.getInverse());
     }
 
