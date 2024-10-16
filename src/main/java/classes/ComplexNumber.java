@@ -98,8 +98,14 @@ public class ComplexNumber {
     @Override
     public String toString() {
         DecimalFormat decFormat = new DecimalFormat("#.##");
-        return "(" + decFormat.format(getReal())
-                + " + "
-                + decFormat.format(getImaginary()) + "i)";
+        if (getImaginary() >= 0) {
+            return "(" + decFormat.format(getReal())
+                    + " + "
+                    + decFormat.format(getImaginary()) + "i)";
+        } else {
+            return "(" + decFormat.format(getReal())
+                    + " - "
+                    + decFormat.format(getImaginary() * (-1))  + "i)";
+        }
     }
 }
